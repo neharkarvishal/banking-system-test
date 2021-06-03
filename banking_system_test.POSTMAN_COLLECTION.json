@@ -12,7 +12,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWJjIiwiaWQiOjEsImlhdCI6MTYyMjcwMjg1NiwiZXhwIjoxNjIyNzg5MjU2fQ.PhsF4Ly4Hs7eZMmBTZHBuRnzAw3sgbB0_LxMy20X43g",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWJjIiwiaWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNjIyNzE1Nzc0LCJleHAiOjE2MjI4MDIxNzR9.AKLxNRSJuragnRqCuUFWX7b2clIua_201w0Bkl3-hGo",
 						"type": "text"
 					}
 				],
@@ -38,7 +38,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"abc\",\r\n    \"password\": \"abc\"\r\n}",
+					"raw": "{\r\n    \"name\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -126,13 +126,13 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWJjIiwiaWQiOjEsImlhdCI6MTYyMjcwMjg1NiwiZXhwIjoxNjIyNzg5MjU2fQ.PhsF4Ly4Hs7eZMmBTZHBuRnzAw3sgbB0_LxMy20X43g",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWJjIiwiaWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNjIyNzE1Nzc0LCJleHAiOjE2MjI4MDIxNzR9.AKLxNRSJuragnRqCuUFWX7b2clIua_201w0Bkl3-hGo",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"amount\": 1, \"type\":\"WITHDRAW\"\r\n}",
+					"raw": "{\r\n    \"amount\": 10, \"type\":\"DEPOSIT\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -149,6 +149,106 @@
 					"path": [
 						"users",
 						"transact"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWJjIiwiaWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNjIyNzE1Nzc0LCJleHAiOjE2MjI4MDIxNzR9.AKLxNRSJuragnRqCuUFWX7b2clIua_201w0Bkl3-hGo",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"to\": 1,\r\n    \"amount\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/transfer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[ADMIN] All Users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJpZCI6Miwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjIyNzE1OTI0LCJleHAiOjE2MjI4MDIzMjR9.l1wDl1qPxtSyZWJ6CwxSdjZi8NMrxVD7iazRUHLR4Ks",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/users/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[ADMIN] Get transactions by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJpZCI6Miwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjIyNzE1OTI0LCJleHAiOjE2MjI4MDIzMjR9.l1wDl1qPxtSyZWJ6CwxSdjZi8NMrxVD7iazRUHLR4Ks",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 10, \"type\":\"DEPOSIT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/transactions/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"transactions",
+						"2"
 					]
 				}
 			},
