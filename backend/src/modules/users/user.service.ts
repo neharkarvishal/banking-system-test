@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 
 import { BadRequest, NotFound } from '../../exceptions/ApiException'
 import {
+    getAllUsersFromDb,
     getSumAmountOfType,
     getTransactionsFromDb,
     insertTransaction,
@@ -42,6 +43,15 @@ async function getTransactions({ fields }) {
     }
 }
 
+/** Get Transactions */
+async function getAllUsers() {
+    try {
+        return await getAllUsersFromDb()
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
+
 /** Deposit */
 async function transact({ fields }) {
     const { amount = 0, userId, type = 'DEPOSIT' } = fields
@@ -74,6 +84,7 @@ function userService() {
         loginUser,
         getTransactions,
         transact,
+        getAllUsers,
     }
 }
 

@@ -5,13 +5,7 @@ import ApiException, { NotFound, Unauthorized } from '../exceptions/ApiException
 
 const secret = process.env.JWT_SECRET ?? 'JWT_SECRET'
 
-const authMiddleware = (
-    {
-        role,
-    }: {
-        role: RoleType | undefined
-    } = { role: undefined },
-): RequestHandler => {
+const authMiddleware = (role: RoleType | undefined = undefined): RequestHandler => {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
             /** Check Authorization token present */
@@ -33,9 +27,9 @@ const authMiddleware = (
                         role &&
                         user &&
                         user?.role &&
-                        user?.role.toUpperCase() === role
+                        user?.role.toUpperCase() !== role
                     )
-                        throw Unauthorized()
+                        throw Unauthorized({ role: 'Admin role required' })
 
                     // @ts-ignore
                     req.user = user

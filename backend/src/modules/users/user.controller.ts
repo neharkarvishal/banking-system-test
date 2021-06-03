@@ -6,7 +6,7 @@ import validator from '../../middlewares/validator.middleware'
 import userService from './user.service'
 import { depositSchema, loginUserSchema } from './user.validator'
 
-const { loginUser, getTransactions, transact } = userService()
+const { loginUser, getTransactions, transact, getAllUsers } = userService()
 
 const router = express.Router()
 
@@ -47,6 +47,22 @@ function getTransactionsHandler(options): RequestHandler {
 }
 
 /** RequestHandler */
+function getAllUsersHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        try {
+            const data = await getAllUsers()
+
+            res.status(200).json({
+                data,
+                status: 'ok',
+            })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
+/** RequestHandler */
 function transactHandler(options): RequestHandler {
     return async (req, res, next) => {
         const { id } = req.user
@@ -69,6 +85,9 @@ function transactHandler(options): RequestHandler {
 
 /** User Controller */
 function userController(dependencies) {
+    /** GET */
+    router.get('/all', authMiddleware('ADMIN'), getAllUsersHandler(dependencies))
+
     /** GET */
     router.get(
         '/transactions',
