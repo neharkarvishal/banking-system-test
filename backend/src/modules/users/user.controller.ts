@@ -45,6 +45,25 @@ function getTransactionsHandler(options): RequestHandler {
         }
     }
 }
+/** RequestHandler */
+function getTransactionsByIdHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        const { id } = req.params
+
+        try {
+            if (!id) throw NotFound({ user: 'User does not exist.' })
+
+            const data = await getTransactions({ fields: { userId: id } })
+
+            res.status(200).json({
+                data,
+                status: 'ok',
+            })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
 
 /** RequestHandler */
 function getAllUsersHandler(options): RequestHandler {
@@ -87,6 +106,13 @@ function transactHandler(options): RequestHandler {
 function userController(dependencies) {
     /** GET */
     router.get('/all', authMiddleware('ADMIN'), getAllUsersHandler(dependencies))
+
+    /** GET */
+    router.get(
+        '/transactions/:id',
+        authMiddleware('ADMIN'),
+        getTransactionsByIdHandler(dependencies),
+    )
 
     /** GET */
     router.get(
