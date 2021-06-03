@@ -1,12 +1,12 @@
 import { knex } from '../../knex'
 
 export async function validateUser(name: string, password: string) {
-    return knex('users')
+    return knex<User>('users')
         .where({
             name,
             password,
         })
-        .select('users.name as name', 'users.id as id')
+        .select('users.name as name', 'users.id as id', 'users.role as role')
 }
 
 export async function getTransactionsFromDb(userId: string) {
@@ -24,8 +24,16 @@ export async function getTransactionsFromDb(userId: string) {
         )
 }
 
-export async function getSumAmountOfType(type: 'DEPOSIT' | 'WITHDRAW') {
-    return knex<Account>('accounts').where({ type }).sum('amount as amount')
+export async function getSumAmountOfType(
+    userId: number,
+    type: 'DEPOSIT' | 'WITHDRAW',
+) {
+    return knex<Account>('accounts')
+        .where({
+            userId,
+            type,
+        })
+        .sum('amount as amount')
 }
 
 export async function insertTransaction(

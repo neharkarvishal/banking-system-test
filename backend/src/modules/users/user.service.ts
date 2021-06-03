@@ -48,8 +48,8 @@ async function transact({ fields }) {
 
     try {
         if (type === 'WITHDRAW') {
-            const [deposits] = await getSumAmountOfType('DEPOSIT')
-            const [withdrawals] = await getSumAmountOfType('WITHDRAW')
+            const [deposits] = await getSumAmountOfType(userId, 'DEPOSIT')
+            const [withdrawals] = await getSumAmountOfType(userId, 'WITHDRAW')
 
             // @ts-ignore
             const total = deposits.amount - withdrawals.amount

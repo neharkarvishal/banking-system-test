@@ -26,6 +26,7 @@ void (async () => {
                 table.increments('id')
                 table.string('name')
                 table.string('password')
+                table.string('role').defaultTo('USER')
                 table.timestamps(true, true)
             })
             .createTableIfNotExists('accounts', (table) => {
@@ -39,8 +40,16 @@ void (async () => {
         // seed one user
         if (!(await knex('users').count())[0]['count(*)']) {
             await knex('users').insert({
+                id: 1,
                 name: 'abc',
                 password: 'abc',
+                role: 'USER',
+            })
+            await knex('users').insert({
+                id: 2,
+                name: 'admin',
+                password: 'admin',
+                role: 'ADMIN',
             })
         }
     } catch (e) {
