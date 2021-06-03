@@ -11,3 +11,9 @@ export const depositSchema = Joi.object({
 
     type: Joi.string().required().valid('DEPOSIT', 'WITHDRAW').label('Type'),
 })
+
+export const transferSchema = Joi.object({
+    to: Joi.number().integer().required().label('To'),
+
+    amount: Joi.number().integer().required().label('amount'),
+})

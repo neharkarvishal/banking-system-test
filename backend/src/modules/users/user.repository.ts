@@ -68,3 +68,16 @@ export async function insertTransaction(
         type,
     })
 }
+
+export async function transferFunds({ to, amount, from }) {
+    await knex<Account>('accounts').insert({
+        userId: to,
+        amount,
+        type: 'DEPOSIT',
+    })
+    await knex<Account>('accounts').insert({
+        userId: from,
+        amount,
+        type: 'WITHDRAW',
+    })
+}

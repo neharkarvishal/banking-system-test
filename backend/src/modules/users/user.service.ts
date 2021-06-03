@@ -6,6 +6,7 @@ import {
     getSumAmountOfType,
     getTransactionsFromDb,
     insertTransaction,
+    transferFunds,
     validateUser,
 } from './user.repository'
 
@@ -43,7 +44,30 @@ async function getTransactions({ fields }) {
     }
 }
 
-/** Get Transactions */
+/** Transfer */
+async function transfer({ fields }) {
+    const { to, amount, from } = fields
+
+    const [deposits] = await getSumAmountOfType(from, 'DEPOSIT')
+    const [withdrawals] = await getSumAmountOfType(from, 'WITHDRAW')
+
+    // @ts-ignore
+    const total = deposits.amount - withdrawals.amount
+    if (Number.isNaN(total)) throw BadRequest({ total: 'Total is not a number' })
+    // @ts-ignore
+    if (total === 0 || total < amount)
+        throw BadRequest({ total: 'No sufficient Fund' })
+
+    await transferFunds({ to, amount, from })
+
+    try {
+        return { to, amount, from }
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
+
+/** Get All Users */
 async function getAllUsers() {
     try {
         return await getAllUsersFromDb()
@@ -52,7 +76,7 @@ async function getAllUsers() {
     }
 }
 
-/** Deposit */
+/** Deposit/Withdraw */
 async function transact({ fields }) {
     const { amount = 0, userId, type = 'DEPOSIT' } = fields
 
@@ -85,6 +109,7 @@ function userService() {
         getTransactions,
         transact,
         getAllUsers,
+        transfer,
     }
 }
 

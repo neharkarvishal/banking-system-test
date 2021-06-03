@@ -1,12 +1,13 @@
 import express, { RequestHandler } from 'express'
 
-import { NotFound } from '../../exceptions/ApiException'
+import { BadRequest, NotFound } from '../../exceptions/ApiException'
 import authMiddleware from '../../middlewares/auth.middleware'
 import validator from '../../middlewares/validator.middleware'
 import userService from './user.service'
-import { depositSchema, loginUserSchema } from './user.validator'
+import { depositSchema, loginUserSchema, transferSchema } from './user.validator'
 
-const { loginUser, getTransactions, transact, getAllUsers } = userService()
+const { loginUser, getTransactions, transact, getAllUsers, transfer } =
+    userService()
 
 const router = express.Router()
 
@@ -45,6 +46,7 @@ function getTransactionsHandler(options): RequestHandler {
         }
     }
 }
+
 /** RequestHandler */
 function getTransactionsByIdHandler(options): RequestHandler {
     return async (req, res, next) => {
@@ -54,6 +56,27 @@ function getTransactionsByIdHandler(options): RequestHandler {
             if (!id) throw NotFound({ user: 'User does not exist.' })
 
             const data = await getTransactions({ fields: { userId: id } })
+
+            res.status(200).json({
+                data,
+                status: 'ok',
+            })
+        } catch (e) {
+            return next(e)
+        }
+    }
+}
+
+/** RequestHandler */
+function transferHandler(options): RequestHandler {
+    return async (req, res, next) => {
+        const { to, amount } = req.body
+        const { id: from } = req.user
+
+        try {
+            if (to === from) throw BadRequest({ user: 'Cant transfer to yourself' })
+
+            const data = await transfer({ fields: { to, amount, from } })
 
             res.status(200).json({
                 data,
@@ -127,6 +150,14 @@ function userController(dependencies) {
         validator(depositSchema),
         authMiddleware(),
         transactHandler(dependencies),
+    )
+
+    /** POST */
+    router.post(
+        '/transfer',
+        validator(transferSchema),
+        authMiddleware(),
+        transferHandler(dependencies),
     )
 
     /** POST */
