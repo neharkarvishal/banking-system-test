@@ -48,19 +48,20 @@ async function getTransactions({ fields }) {
 async function transfer({ fields }) {
     const { to, amount, from } = fields
 
-    const [deposits] = await getSumAmountOfType(from, 'DEPOSIT')
-    const [withdrawals] = await getSumAmountOfType(from, 'WITHDRAW')
-
-    // @ts-ignore
-    const total = deposits.amount - withdrawals.amount
-    if (Number.isNaN(total)) throw BadRequest({ total: 'Total is not a number' })
-    // @ts-ignore
-    if (total === 0 || total < amount)
-        throw BadRequest({ total: 'No sufficient Fund' })
-
-    await transferFunds({ to, amount, from })
-
     try {
+        const [deposits] = await getSumAmountOfType(from, 'DEPOSIT')
+        const [withdrawals] = await getSumAmountOfType(from, 'WITHDRAW')
+
+        // @ts-ignore
+        const total = deposits.amount - withdrawals.amount
+        if (Number.isNaN(total)) throw BadRequest({ total: 'Total is not a number' })
+
+        // @ts-ignore
+        if (total === 0 || total < amount)
+            throw BadRequest({ total: 'No sufficient Fund' })
+
+        await transferFunds({ to, amount, from })
+
         return { to, amount, from }
     } catch (e) {
         return Promise.reject(e)
@@ -89,6 +90,7 @@ async function transact({ fields }) {
             const total = deposits.amount - withdrawals.amount
             if (Number.isNaN(total))
                 throw BadRequest({ total: 'Total is not a number' })
+
             // @ts-ignore
             if (total === 0 || deposits.amount < withdrawals.amount)
                 throw BadRequest({ total: 'No sufficient Fund' })
